@@ -1,0 +1,30 @@
+body {
+	background: rgba(35, 26, 170, 0.76) url("../music/images/background1.jpg");
+	background-color: #cccccc; /* Used if the image is unavailable */
+	height: auto; /* You must set a specified height */
+	background-position: center; /* Center the image */
+	background-repeat: no-repeat; /* Do not repeat the image */
+	background-size: cover; /* Resize the background image to cover the entire container */
+}
+/* music\static\music\images\background.jpg */
+.navbar {
+	border-radius: 0;
+}
+
+.navbar-brand {
+	font-family: "Satisfy", cursive;
+}
+
+.card-custom {
+	max-width: 128px;
+}
+.card:hover {
+	transform: scale(1.05);
+	position: initial;
+	z-index: 111;
+	background: #fff;
+}
+.row {
+	margin-left: -20px;
+	margin-right: -15px;
+}
