@@ -31,6 +31,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'account.apps.AccountConfig',
+    'BruteBuster',
+    'crispy_forms',
     'music.apps.MusicConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,6 +44,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'BruteBuster.middleware.RequestMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -126,3 +130,15 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# for brutebuster
+BB_MAX_FAILURES = 1
+BB_BLOCK_INTERVAL = 1
+
+
+LOGIN_REDIRECT_URL = 'music:index'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+
+# python manage.py migrate --run-syncdb for migrating table of axes

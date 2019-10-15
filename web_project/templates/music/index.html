@@ -1,22 +1,23 @@
 {% extends 'music/base.html' %} {% block body %} {% if album_list %}
+
 <div class="card-deck">
 	{% for album in album_list %}
-	<br>
-
-	<div class="card">
-		{%if album.album_logo %}
-		<img src="{{ album.album_logo.url }}" class="card-img-top"
-			height="220px">
-		{%endif%}
-		<div class="card-body">
-			<h5 class="card-title">{{album.name}}</h5>
-			<p class="card-text">Some quick example text to build on the card title and
-				make up the bulk of the card's content.</p>
-			<a href="{% url 'music:details' album.id %}" class="btn btn-primary">Go
-				somewhere</a>
-		</div>
-		<div class="card-footer">
-			<small class="text-muted">Last updated 3 mins ago</small>
+	<div class="col-sm-4 col-lg-4 col-xl-4 pb-1">
+		<div class="card h-100 bg-light mb-3">
+			{%if album.album_logo %}
+			<img src="{{ album.album_logo.url }}" class="card-img-top"
+				height="220px">
+			{%endif%}
+			<div class="card-body">
+				<h5 class="card-title">{{album.name}}</h5>
+				<p class="card-text">Some quick example text to build on the card title and
+					make up the bulk of the card's content.</p>
+				<a href="{% url 'music:details' album.id %}" class="btn btn-primary">Go
+					somewhere</a>
+			</div>
+			<div class="card-footer">
+				<small class="text-muted">{{album.was_published_recently}}</small>
+			</div>
 		</div>
 	</div>
 	<!-- <li>
