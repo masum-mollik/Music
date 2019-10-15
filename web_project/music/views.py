@@ -35,10 +35,10 @@ class DetailView(generic.DetailView):
         return super().dispatch(*args, **kwargs)
 
 
-decorators = [never_cache, login_required]
-
-
-@method_decorator(decorators, name='dispatch')
+@never_cache
+@login_required
+# decorators = [never_cache, login_required]
+# @method_decorator(decorators, name='dispatch') was changed by the above decorators
 def favorite(request, album_id):
     album = get_object_or_404(Album, pk=album_id)
     context = {'album': album,

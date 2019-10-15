@@ -1,0 +1,32 @@
+{% extends 'account/base.html' %}
+
+
+{% block title %} Login Here {% endblock %}
+{% load crispy_forms_tags %}
+
+
+{% block body %}
+<div class="col-sm-2 xol-lg-2">
+</div>
+<div class="col-lg-10 col-sm-10">
+    <div class="card col-lg-10 col-sm-10 pl-5">
+        <img src="..." class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Register</h5>
+            {% if error_message %}
+            <p class="card-text">{{ error_message }}</p>
+            {% endif %}
+            <p class="card-text">
+                <form method="POST" class="form-group">
+                    {% csrf_token %}
+                    {{form|crispy}}
+                    <p>If you don't have an account, please click <a
+                            href="{% url 'account:register' %}">here</a> to
+                        register.</p>
+                    <button type="submit" class="btn btn-success">Login</button>
+                </form>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
