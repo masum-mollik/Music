@@ -1,4 +1,5 @@
 {% extends 'music/base.html' %} {% block body %} {% load static %}
+{% load notifications_tags %}
 <div class="container-fluid">
 
 	<div class="row">
@@ -11,19 +12,29 @@
 			/>
 	</div>
 	<div class="row">
-		<h1> {{ album.name }} </h1>
+		{% notifications_unread as unread_count %}
+		{% if unread_count %}
+		You have <strong>{{ unread_count }}</strong> unread notifications.
+		{{ user.notifications.objects.all }}
+		{% endif %}
 	</div>
 	<div class="row">
-		<h3>{{ album.artist }}</h3>
+		<h1> Album Name: {{ album.name }} </h1>
 	</div>
 	<div class="row">
-		<h3> {{ album.genre }}</h3>
+		<h3> Artist: {{ album.artist }}</h3>
+	</div>
+	<div class="row">
+		<h3> Genre: {{ album.genre }}</h3>
 	</div>
 	<div class="row">
 		{% if error_message %}
 		<p><strong>{{ error_message }}</strong></p>
+		<p></p>
 		{% endif %}
+		<br>
 		{%if album.song_set.all %}
+		<h3>Songs: </h3><br><br>
 		<form action="{% url 'music:favorite' album.id %}" method="POST">
 			{% csrf_token %} {%for song in album.song_set.all%}
 			<input
@@ -34,6 +45,9 @@
 				/>
 			<label for="song{{ forloop.counter }}" style="font-size: 40px">
 				{{ song.song_title }}
+				{{ song.mp3.url }}
+				<audio controls>
+					<source src="{{ song.mp3.url }}" type="audio/{{song.file_type}}"></audio>
 				{% if song.is_favorite %}
 				<img
 					src="{% static '/music/images/star.png' %}"

@@ -1,3 +1,5 @@
+import json
+from rest_framework import generics
 from django.http import HttpResponse
 from django.shortcuts import render
 from .models import Album, Song
@@ -12,17 +14,20 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
-
+from .serializers import SongSerializer
 decorators = [never_cache, login_required]
 
 
 @method_decorator(decorators, name='dispatch')
 class IndexView(generic.ListView):
+    model = Album
     template_name = 'music/index.html'
     context_object_name = 'album_list'
 
     def get_queryset(self):
-        return Album.objects.all()
+        queryset = super(IndexView, self).get_queryset()
+        queryset = Album.objects.filter(user=self.request.user)
+        return queryset
 
 
 class DetailView(generic.DetailView):
@@ -33,6 +38,11 @@ class DetailView(generic.DetailView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
+
+    def get_queryset(self):
+        queryset = super(DetailView, self).get_queryset()
+        queryset = queryset.filter(user=self.request.user)
+        return queryset
 
 
 @never_cache
@@ -111,3 +121,67 @@ class AlbumDeleteView(DeleteView):
             return http.HttpResponseRedirect(success_url)
         else:
             return http.HttpResponseForbidden("Invalid delete request")
+
+
+decorators = [never_cache, login_required]
+
+
+@method_decorator(decorators, name='dispatch')
+@method_decorator(login_required, name='dispatch')
+class SongCreateView(CreateView):
+    model = Song
+    template_name = 'music/song_form.html'
+    fields = ['file_type', 'song_title', 'file']
+
+    # def form_valid(self, form):
+    #     album = self.request.album
+    #     form.instance.album = album
+    #     return super(SongCreateView, self).form_valid(form)
+    def get_initial(self):
+        album = get_object_or_404(Album, pk=self.kwargs.get('pk'))
+        return {
+            'album': album
+        }
+
+    def form_valid(self, form):
+        album_id = self.kwargs.get('pk')
+        form.instance.album_id = album_id
+        return super(SongCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('music:index')
+
+
+decorators = [never_cache, login_required]
+
+
+@method_decorator(decorators, name='dispatch')
+@method_decorator(login_required, name='dispatch')
+class SongDeleteView(DeleteView):
+    model = Song
+    template_name = 'music/album_confirm_delete.html'
+    success_url = reverse_lazy('music:index')
+    pk_url_kwarg = 'song_pk'
+
+    # def delete(self, request, *args, **kwargs):
+    #     # the Post object
+    #     self.object = self.get_object()
+    #     if self.object.User == request.user:
+    #         success_url = self.get_success_url()
+    #         self.object.delete()
+    #         return http.HttpResponseRedirect(success_url)
+    #     else:
+    #         return http.HttpResponseForbidden("Invalid delete request")
+
+
+class SongListView(generics.ListAPIView):
+    serializer_class = SongSerializer
+
+    def get_queryset(self):
+        queryset = Song.objects.all()
+        return queryset
+
+
+def song_detail(request):
+    song = Song.objects.all()
+    return render(request, 'music/circleplay.html', {'song': song})

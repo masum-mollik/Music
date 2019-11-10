@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'notifications',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -133,12 +135,16 @@ MEDIA_URL = '/media/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # for brutebuster
-BB_MAX_FAILURES = 1
+BB_MAX_FAILURES = 100
 BB_BLOCK_INTERVAL = 1
 
 
 LOGIN_REDIRECT_URL = 'music:index'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+
+DJANGO_NOTIFICATIONS_CONFIG = {'USE_JSONFIELD': True}
+DJANGO_NOTIFICATIONS_CONFIG = {'SOFT_DELETE': True}
 
 
 # python manage.py migrate --run-syncdb for migrating table of axes

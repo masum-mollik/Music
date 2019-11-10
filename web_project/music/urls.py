@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .models import Album
+from .models import Album, Song
 from .import views
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required, permission_required
@@ -22,4 +22,10 @@ urlpatterns = [
     # music/album/2/delete/
     path('album/<int:pk>/delete/',
          views.AlbumDeleteView.as_view(), name='album-delete'),
+    path('album/<int:pk>/create_song/',
+         views.SongCreateView.as_view(), name='create_song'),
+    path('album/<int:pk>/<int:song_pk>/',
+         views.SongDeleteView.as_view(), name='song-delete'),
+    path('list/', views.SongListView.as_view(), name='song_list'),
+    path('song/', views.song_detail, name='song_detail'),
 ]
